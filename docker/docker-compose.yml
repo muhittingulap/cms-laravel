@@ -1,27 +1,21 @@
 version: '3'
 
 networks: 
-  laravel:
+  cms-laravel:
 
 services: 
-  nginx:
-    image: nginx:latest
-    container_name: lnginx
-    depends_on: 
-      - php
-      - mysql
+  cms-laravel-nginx:
+    image: nginx:alpine
     ports: 
       - '80:80'
     volumes: 
       - ./../src:/var/www/html      
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
     networks: 
-      - laravel
+      - cms-laravel
 
-
-  mysql:
+  cms-laravel-mysql:
     image: mysql
-    container_name: lmysql
     restart: unless-stopped
     tty: true
     ports: 
@@ -31,20 +25,21 @@ services:
       - ./db/my.cnf:/etc/my.cnf
     environment: 
       MYSQL_DATABASE: laravel
-      MYSQL_USER: laravel-user
-      MYSQL_PASSWORD: laravel-password
-      MYSQL_ROOT_PASSWORD: laravel-password
+      MYSQL_USER: cms-laravel-user
+      MYSQL_PASSWORD: cms-laravel-password
+      MYSQL_ROOT_PASSWORD: cms-laravel-password
     networks: 
-      - laravel
+      - cms-laravel
 
-  php:    
+  cms-laravel-php:    
     build: 
       context: .
       dockerfile: dockerfile
-    container_name: lphp
+    depends_on: 
+      - mysql
     volumes: 
       - ./../src:/var/www/html
     ports: 
       - '3000:9000'
     networks: 
-      - laravel
+      - cms-laravel
