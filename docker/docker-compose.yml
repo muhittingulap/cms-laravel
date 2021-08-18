@@ -6,6 +6,9 @@ networks:
 services: 
   cms-laravel-nginx:
     image: nginx:alpine
+    depends_on: 
+      - cms-laravel-mysql
+      - cms-laravel-php
     ports: 
       - '80:80'
     volumes: 
@@ -34,9 +37,9 @@ services:
   cms-laravel-php:    
     build: 
       context: .
-      dockerfile: dockerfile
+      dockerfile: ./php/php.yml
     depends_on: 
-      - mysql
+      - cms-laravel-mysql
     volumes: 
       - ./../src:/var/www/html
     ports: 
