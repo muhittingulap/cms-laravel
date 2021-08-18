@@ -38,8 +38,6 @@ services:
     build: 
       context: .
       dockerfile: ./php/php.yml
-    depends_on: 
-      - cms-laravel-mysql
     volumes: 
       - ./../src:/var/www/html
     ports: 
